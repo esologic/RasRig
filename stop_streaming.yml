@@ -1,0 +1,7 @@
+---
+- name: Stop Streaming
+  hosts: cameras
+  user: pi
+  become: true
+  tasks:
+    - include_tasks: stop_service.yml

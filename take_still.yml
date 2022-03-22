@@ -1,0 +1,32 @@
+---
+- name: Take Still
+  hosts: cameras
+  user: pi
+  become: true
+  tasks:
+    - include_tasks: stop_service.yml
+    - name: set image path
+      set_fact:
+        image_path: "/tmp/{{  inventory_hostname  }}_{{ ansible_date_time.iso8601_basic }}.jpg"
+    - name: take image
+      ansible.builtin.command: "raspistill {{ raspistill_args }} -o {{ image_path }}"
+      args:
+        creates: "{{ image_path }}"
+      register: capture_result
+      failed_when: capture_result.rc != 0
+      notify: copy image
+    - include_tasks: start_service.yml
+      when: stream_running
+  handlers:
+    - name: copy image
+      ansible.builtin.fetch:
+        src: "{{ image_path }}"
+        dest: ./images/
+        flat: yes
+        fail_on_missing: yes
+        validate_checksum: yes
+      notify: delete remote image
+    - name: delete remote image
+      ansible.builtin.file:
+        path: "{{ image_path }}"
+        state: absent

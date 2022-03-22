@@ -1,0 +1,29 @@
+---
+- name: Start Streaming
+  hosts: cameras
+  user: pi
+  become: true
+  tasks:
+    - name: read installed packages
+      package_facts:
+        manager: apt
+    - name: read running services
+      ansible.builtin.service_facts:
+    - include_tasks: stop_service.yml
+    - name: install vlc
+      apt:
+        name: vlc
+        state: present
+      when: '"vlc" not in ansible_facts.packages'
+    - name: copy script
+      template:
+        src: stream_video.sh.jinja2
+        dest: /home/pi/stream_video.sh
+        mode: +x
+    - name: copy service
+      template:
+        src: network_stream.service
+        dest: /etc/systemd/system
+        owner: root
+        group: root
+    - include_tasks: start_service.yml

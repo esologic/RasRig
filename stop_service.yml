@@ -1,0 +1,11 @@
+---
+- name: read running services
+  ansible.builtin.service_facts:
+- name: read streaming status
+  set_fact:
+    stream_running: "{{  ('network_stream.service' in ansible_facts.services) and (ansible_facts.services['network_stream.service']['state'] == 'running') }}"
+- name: stop service
+  systemd:
+    name: network_stream
+    state: stopped
+  when: stream_running
