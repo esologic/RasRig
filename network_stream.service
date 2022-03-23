@@ -3,7 +3,7 @@ Description=Streams video from an attached Camera to a TCP socket.
 
 [Service]
 User=pi
-ExecStart=/home/pi/start_streaming.sh
+ExecStart=/home/pi/stream_video.sh
 Restart=on-failure
 
 [Install]
