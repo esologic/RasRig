@@ -7,7 +7,7 @@
     - include_tasks: stop_service.yml
     - name: set image path
       set_fact:
-        image_path: "/tmp/{{  inventory_hostname  }}_{{ ansible_date_time.iso8601_basic }}.jpg"
+        image_path: "/tmp/{{  inventory_hostname  }}-{{ ansible_date_time.iso8601_basic }}.jpg"
     - name: take image
       ansible.builtin.command: "raspistill {{ raspistill_args }} -o {{ image_path }}"
       args:
