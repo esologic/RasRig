@@ -4,17 +4,37 @@
   user: pi
   become: true
   tasks:
-    - name: read installed packages
-      package_facts:
-        manager: apt
-    - name: read running services
-      ansible.builtin.service_facts:
     - include_tasks: stop_service.yml
-    - name: install vlc
-      apt:
-        name: vlc
-        state: present
-      when: '"vlc" not in ansible_facts.packages'
+    - name: check if mjpg_streamer installed
+      stat:
+        path: /home/pi/mjpg-streamer/mjpg-streamer-experimental/mjpg_streamer
+      register: mjpg_streamer_executable
+    - block:
+        - name: install apt dependencies
+          apt:
+            pkg:
+              - cmake
+              - libjpeg8-dev
+              - gcc
+              - g++
+              - git
+            state: present
+        - name: clone mjpg-streamer repo
+          ansible.builtin.git:
+            repo: https://github.com/jacksonliam/mjpg-streamer.git
+            dest: /home/pi/mjpg-streamer
+            accept_hostkey: yes
+        - name: compile mjpg-streamer
+          ansible.builtin.command: make
+          args:
+            chdir: /home/pi/mjpg-streamer/mjpg-streamer-experimental
+        - name: install mjpg-streamer
+          ansible.builtin.command: make install
+          become: yes
+          become_user: root
+          args:
+            chdir: /home/pi/mjpg-streamer/mjpg-streamer-experimental
+      when: not mjpg_streamer_executable.stat.exists
     - name: copy script
       template:
         src: stream_video.sh.jinja2
