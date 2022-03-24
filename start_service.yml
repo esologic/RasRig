@@ -1,0 +1,6 @@
+---
+- name: start service
+  systemd:
+    name: network_stream
+    state: restarted
+    enabled: no
