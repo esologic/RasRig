@@ -1,5 +1,7 @@
 [Unit]
 Description=Streams video from an attached Camera to a TCP socket.
+Wants=network-online.target
+After=network-online.target
 
 [Service]
 User=pi

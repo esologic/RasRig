@@ -3,4 +3,4 @@
   systemd:
     name: network_stream
     state: restarted
-    enabled: no
+    enabled: yes
