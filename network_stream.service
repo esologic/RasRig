@@ -4,7 +4,7 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
-User=pi
+User=root
 ExecStart=/home/pi/stream_video.sh
 Restart=on-failure
 
