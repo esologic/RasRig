@@ -1,5 +1,7 @@
 # RasRig (Software)
 
+![Raspberry Pi 3B, with a HQ Camera](./img.jpg)
+
 A collection of playbooks/scripts to use Raspberry Pi's to send video into OBS to create rich, 
 multi-camera livestreams. See the [blog post](https://esologic.com/stream-parts/#rasrig) for design
 rationale, BOMs and printable parts.
